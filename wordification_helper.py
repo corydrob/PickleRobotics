@@ -11,3 +11,6 @@ reverse_keypad={}
 for number,letters in keypad.items():
 	for char in letters:
 		reverse_keypad[char]=number
+
+#print('keypad: \n', keypad)
+#print('reverse lookup: \n',reverse_keypad)
