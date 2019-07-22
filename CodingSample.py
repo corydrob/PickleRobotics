@@ -1,9 +1,14 @@
 import wordification_helper as help
 from nltk.corpus import words as word_list
-
-#currently treating country code as mandatory. 
-#May change mind on that later.
+import time
+ 
 def numbers_to_words(number_string):
+	if len(number_string)==10:
+		print('10 digit number. Assuming that this is a US number with country-code missing.'
+			)
+	elif len(number_string)!=11:
+		print("This does not appear to be a US phone number.")
+		return None
 	
 	pass
 
@@ -13,7 +18,7 @@ def words_to_numbers(wordification):
 	if len(wordification)==10:
 		print('Phone number seems to lack a country code. Is this intentional?')
 	elif len(wordification) !=11:
-		return('Error: Length wrong. Try with a fresh number')
+		return('Error: Length wrong. Are you sure this wordification started as an American phone number')
 	output=''
 	for i in wordification:
 		print('here')
@@ -41,7 +46,12 @@ def all_wordifications(number_string):
 		number_string: a string of a US phone number
 
 	'''
+	start=time.time()
+	print('turning word list into set for speed')
 	words=set(word_list.words())
+	end=time.time()
+	print('word list imported. it took ', (end-start))
+	possibilities=['']
 	wordifications = []
 	
 	if len(number_string)==10:
@@ -51,11 +61,40 @@ def all_wordifications(number_string):
 		print("This does not appear to be a US phone number.")
 		return None
 	
-	
-	
-	for i in number_string:
-		if i not in help.keypad.keys():
-			ouptut+=i
+	print('Now we\'re populating the possibilities list')
+	start=time.time()
+	for char in number_string:
+		temp=[]
+		print(char)
+		print(possibilities)
+		if char not in help.keypad.keys():
+			for p in possibilities:
+				temp.append(p+char)
+				print(p)
+			possibilities.extend(temp)
+			print(possibilities)
+				#print(p," should've been for 0 and 1")
 		else:
+			for p in possibilities:
+				#print(p,"should've been for letter substitutions.")
+	
+				for letter in help.keypad[char]:
+					temp.append(p+letter)	
+			possibilities.extend(temp)
+	print(possibilities)
+	print('generated possibilities, above.')
+	end=time.time()
+	print('possibilities took ', (end-start))
+	print('finally, plucking wordifications from possibilities')
+	start=time.time()
+	for p in possibilities:
+		if len(p)>9:
+			#in our list of possible wordifications,, find each one's letter sequences
+			frags=help.parse_fragments(p) 
+			word_status=[(w in words) for w in frags]
+			if all(word_status):
+				wordifications.append(p)
+	end=time.time()
+	print('word verification took ',(end-start))
 	
 	return wordifications
