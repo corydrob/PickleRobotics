@@ -1,5 +1,6 @@
 from mercurial.templater import word
 from Cython.Runtime.refnanny import result
+from re import search
 keypad={'2':['A','B','C'],
 	'3':['D','E','F'],
 	'4':['G','H','I'],
@@ -8,6 +9,10 @@ keypad={'2':['A','B','C'],
 	'7':['P','Q','R','S'],
 	'8':['T','U','V'],
 	'9':['W','X','Y','Z']}
+junk_letters={'B','C','D','E','F',
+			'G','H','J','K','L','M',
+			'N','O','P','Q','R','S'
+			'T','U','V','W','X','Y','Z'}
 
 reverse_keypad={}
 for number,letters in keypad.items():
@@ -27,14 +32,47 @@ def scan_word(s,word_list):
 	of gibberish.
 	'''
 	#output_words=[]
-	result=0			
+	result=1			
 	search_term=''
+	word_positions=[]		#for finding wordifications with multiple short non-overlapping words
+	word_start=0
+	word_end=0
 	
+	chunks=split_word_chunks(s)
+	for chunk in chunks:
+		if chunk in word_list:
+			continue
+		else:
+			
+		
+	return result
+	
+	
+	
+	for i in range(len(s)):
+		if s[i].isalpha():
+			if !word_start:
+				word_start=i
+			word_end=i+1
+			search_term+=s[i]
+			if search_term in word_list:
+				word_positions.append((word_start,word_end)
+		elif s[i].isdigit():
+			word_end=i
+			while len(search_term):
+				search_term=search_term[1:]
+				if search_term in word_list:
+					word_positions.append((word_start,word_end))
+		else:
+			print("You seem to have left punctuation in this input.")
+				
+	#below: previous phrasing 		
+	'''			
 	for char in s:
 		if char.isdigit():
 			while len(search_term):
-				
-			word_search=word_search[1:]
+				search_term=search_term[1:]
+				if word 
 			continue
 		elif char.isalpha():
 			word_search+=char
@@ -42,7 +80,7 @@ def scan_word(s,word_list):
 				output_words.append(search_term)
 	'
 	return result
-	
+	'''
 
 '''
 After I wrote parse_fragments I realized that this does not work 

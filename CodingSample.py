@@ -49,6 +49,11 @@ def all_wordifications(number_string):
 	start=time.time()
 	print('turning word list into set for speed')
 	words=set(word_list.words())
+	#nltk word list includes every English letter as an entry. 
+	#so I'm deleting all but I and A
+	for char in help.junk_letters:
+		words.discard(char)
+	
 	end=time.time()
 	print('word list imported. it took ', (end-start))
 	possibilities=['']
